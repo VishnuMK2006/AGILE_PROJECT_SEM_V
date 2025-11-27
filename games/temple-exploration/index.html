@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<meta name="description" content="HTML5 and Javascript open-source games, built with CraftyJS framework. Play online, or download source (licensed under the GNU GPL).">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="C:\BCA Projects\Year 2024 Identity Project\Arcade Zone\img\arcade-machine.png">
+    <title>Adventure</title>
+		<link rel="stylesheet" type="text/css" href="assets/css/main.css">
+		<script type="text/javascript" src="lib/crafty/crafty-min.js"></script>
+		<style>
+			.btn{
+  cursor: pointer;
+  border: 0;
+  padding: 0.625rem 1.25rem;
+  background-color: red;
+  color: var(--text-color);
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.btnn:focus {
+  outline: 0;
+}
+
+.btnn:hover {
+  background-color: var(--hover-color);
+}
+
+.btnn:active {
+  transform: scale(0.98);
+}
+
+.rules-btnn {
+  position: absolute;
+  top: 1.875rem;
+  left: 1.875rem;
+}
+
+.rules {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--sidebar-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  width: 400px;
+  padding: 3rem;
+  line-height: 1.5;
+  transform: translateX(-400px);
+  transition: transform 1s ease-in-out;
+}
+
+.rules.show {
+  transform: translateX(0);
+}
+		</style>
+	</head>
+	<body >
+		<a href="C:\BCA Projects\Year 2024 Identity Project\Arcade Zone\index.html" id="rules-btnn" class="btn rules-btnn" style="background-color: rgb(62, 165, 255);text-decoration: none;color: black;">Go back</a>
+		<div id="ui-container">
+			<a href="https://www.open-games.org">
+			</a>
+			
+			<div class="ui-button restart"></div>
+			<div class="ui-button mute"></div>
+			<div class="ui-button unmute hidden"></div>
+			<div class="ui-button pause"></div>
+			<div class="ui-button unpause hidden"></div>
+		</div>
+		<div id="general-container" >
+			<div id="game-container"></div>
+		</div>
+		<script type="text/javascript" src="src/time-attack.js"></script>
+		<script type="text/javascript" src="src/init.js"></script>
+		<script type="text/javascript" src="src/menu.js"></script>
+		<script type="text/javascript" src="src/rooms/_shared.js"></script>
+		<script type="text/javascript" src="src/rooms/room-1.js"></script>
+		<script type="text/javascript" src="src/rooms/room-2.js"></script>
+		<script type="text/javascript" src="src/rooms/room-3.js"></script>
+		<script type="text/javascript" src="src/rooms/room-4.js"></script>
+		<script type="text/javascript" src="src/rooms/room-5.js"></script>
+		<script type="text/javascript" src="src/rooms/room-6.js"></script>
+		<script type="text/javascript" src="src/rooms/room-7.js"></script>
+		<script type="text/javascript" src="src/rooms/room-8.js"></script>
+		<script type="text/javascript" src="src/rooms/room-9.js"></script>
+		<script type="text/javascript" src="src/rooms/room-10.js"></script>
+		<script type="text/javascript" src="src/rooms/room-11.js"></script>
+		<script type="text/javascript" src="src/rooms/room-12.js"></script>
+		<script type="text/javascript" src="src/rooms/room-13.js"></script>
+		<script type="text/javascript" src="src/rooms/room-14.js"></script>
+		<script type="text/javascript" src="src/rooms/room-15.js"></script>
+		<script type="text/javascript" src="src/rooms/room-16.js"></script>
+		<script type="text/javascript" src="src/rooms/room-17.js"></script>
+		<script type="text/javascript" src="src/rooms/room-18.js"></script>
+		<script type="text/javascript" src="src/rooms/room-19.js"></script>
+		<script type="text/javascript" src="src/rooms/room-20.js"></script>
+		<script type="text/javascript" src="src/components/player.js"></script>
+		<script type="text/javascript" src="src/components/custom-text.js"></script>
+		<script type="text/javascript" src="src/components/floating-message.js"></script>
+		<script type="text/javascript" src="src/components/platform.js"></script>
+		<script type="text/javascript" src="src/components/trap.js"></script>
+		<script type="text/javascript" src="src/components/loot.js"></script>
+		<script type="text/javascript" src="src/components/key.js"></script>
+		<script type="text/javascript" src="src/components/action-box.js"></script>
+		<script type="text/javascript" src="src/components/door.js"></script>
+	</body>
+</html>

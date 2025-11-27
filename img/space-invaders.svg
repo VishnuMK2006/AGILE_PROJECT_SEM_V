@@ -1,0 +1,49 @@
+<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="space" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0c0c0c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Space background -->
+  <rect width="300" height="200" fill="url(#space)"/>
+  
+  <!-- Stars -->
+  <circle cx="50" cy="30" r="1.5" fill="#fff"/>
+  <circle cx="120" cy="20" r="1" fill="#fff"/>
+  <circle cx="200" cy="40" r="1.5" fill="#fff"/>
+  <circle cx="250" cy="25" r="1" fill="#fff"/>
+  <circle cx="80" cy="160" r="1" fill="#fff"/>
+  <circle cx="180" cy="170" r="1.5" fill="#fff"/>
+  
+  <!-- Invaders -->
+  <g transform="translate(50,50)">
+    <rect x="0" y="0" width="8" height="8" fill="#00ff00"/>
+    <rect x="12" y="0" width="8" height="8" fill="#00ff00"/>
+    <rect x="4" y="8" width="12" height="8" fill="#00ff00"/>
+    <rect x="0" y="16" width="20" height="4" fill="#00ff00"/>
+  </g>
+  
+  <g transform="translate(120,50)">
+    <rect x="0" y="0" width="8" height="8" fill="#00ff00"/>
+    <rect x="12" y="0" width="8" height="8" fill="#00ff00"/>
+    <rect x="4" y="8" width="12" height="8" fill="#00ff00"/>
+    <rect x="0" y="16" width="20" height="4" fill="#00ff00"/>
+  </g>
+  
+  <g transform="translate(190,50)">
+    <rect x="0" y="0" width="8" height="8" fill="#00ff00"/>
+    <rect x="12" y="0" width="8" height="8" fill="#00ff00"/>
+    <rect x="4" y="8" width="12" height="8" fill="#00ff00"/>
+    <rect x="0" y="16" width="20" height="4" fill="#00ff00"/>
+  </g>
+  
+  <!-- Player ship -->
+  <polygon points="150,170 140,180 160,180" fill="#ffffff"/>
+  <rect x="148" y="165" width="4" height="8" fill="#ffffff"/>
+  
+  <!-- Bullets -->
+  <rect x="149" y="130" width="2" height="8" fill="#ffff00"/>
+  <rect x="149" y="100" width="2" height="8" fill="#ffff00"/>
+</svg>

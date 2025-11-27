@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="icon" type="image/x-icon" href="C:\BCA Projects\Year 2024 Identity Project\Arcade Zone\img\arcade-machine.png">
+    <title>Car Dash</title>
+    <style>
+      .btn{
+  cursor: pointer;
+  border: 0;
+  padding: 0.625rem 1.25rem;
+  background-color: var(--button-color);
+  color: var(--text-color);
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.btnn:focus {
+  outline: 0;
+}
+
+.btnn:hover {
+  background-color: var(--hover-color);
+}
+
+.btnn:active {
+  transform: scale(0.98);
+}
+
+.rules-btnn {
+  position: absolute;
+  top: 1.875rem;
+  left: 1.875rem;
+}
+
+.rules {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--sidebar-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  width: 400px;
+  padding: 3rem;
+  line-height: 1.5;
+  transform: translateX(-400px);
+  transition: transform 1s ease-in-out;
+}
+
+.rules.show {
+  transform: translateX(0);
+}
+    </style>
+  </head>
+  
+  <body style="background-color: #000000; text-align: center;">
+    <a href="C:\BCA Projects\Year 2024 Identity Project\Arcade Zone\index.html" id="rules-btnn" class="btn rules-btnn" style="background-color: rgb(62, 165, 255);text-decoration: none;color: black;">Go back</a>
+      <canvas id="gameCanvas" style="width: 95%; height: 900px" width="1024" height="768"></canvas>
+
+      <script src="main.min.js"></script>
+  </body>
+</html>

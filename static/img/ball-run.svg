@@ -1,0 +1,36 @@
+<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8e44ad;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9b59b6;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="ball" cx="50%" cy="30%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ecf0f1;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="300" height="200" fill="url(#bg)"/>
+  
+  <!-- Track/path -->
+  <path d="M 50 150 Q 150 50 250 150" stroke="#ecf0f1" stroke-width="4" fill="none" opacity="0.3"/>
+  
+  <!-- Obstacles -->
+  <rect x="120" y="120" width="15" height="30" fill="#e74c3c"/>
+  <rect x="180" y="100" width="15" height="50" fill="#e74c3c"/>
+  
+  <!-- Ball -->
+  <circle cx="90" cy="130" r="12" fill="url(#ball)" stroke="#bdc3c7" stroke-width="2"/>
+  
+  <!-- Ball shadow -->
+  <ellipse cx="92" cy="145" rx="8" ry="3" fill="#000" opacity="0.3"/>
+  
+  <!-- Speed lines -->
+  <line x1="60" y1="135" x2="75" y2="130" stroke="#ecf0f1" stroke-width="2" opacity="0.6"/>
+  <line x1="55" y1="125" x2="70" y2="120" stroke="#ecf0f1" stroke-width="2" opacity="0.4"/>
+  
+  <!-- Sparks/effects -->
+  <circle cx="95" cy="125" r="2" fill="#f1c40f" opacity="0.8"/>
+  <circle cx="85" cy="135" r="1.5" fill="#f39c12" opacity="0.6"/>
+</svg>

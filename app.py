@@ -1,114 +1,210 @@
-from flask import Flask, render_template, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier
-import numpy as np 
+from flask import Flask, request, render_template, redirect, url_for, flash, session, jsonify, send_from_directory
+import sqlite3
+import hashlib
+import secrets
+from datetime import datetime, timedelta
 import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///scores.db'
-db = SQLAlchemy(app)
-model = None
-scaler = None
-last_modified_time = None
+app.secret_key = secrets.token_hex(16)  # Generate a secure secret key
 
-class Score(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
-    score = db.Column(db.Integer, nullable=False)
-    time = db.Column(db.Integer, nullable=False) 
-    difficulty = db.Column(db.String(10), nullable=False)  
-    date = db.Column(db.DateTime, default=datetime.utcnow)
+# Database configuration
+DATABASE = 'users.db'
 
-def train_model():
-    global model, scaler, last_modified_time
-    
-    df = pd.read_csv('dataset.csv')
+def get_db_connection():
+    """Get database connection"""
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    return conn
 
-    last_modified_time = os.path.getmtime('dataset.csv')
+def init_db():
+    """Initialize the database with users table"""
+    conn = get_db_connection()
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            last_login TIMESTAMP
+        )
+    ''')
+    conn.commit()
+    conn.close()
 
-    X = df[['score', 'time', 'difficulty']]
-    y = df['label']
-    
-    # Split the data
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    
-    # Scale the features
-    scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
-    
-    # Train the model
-    model = RandomForestClassifier(n_estimators=100, random_state=42)
-    model.fit(X_train_scaled, y_train)
-    
-    return model, scaler
+def hash_password(password):
+    """Hash password using SHA-256"""
+    return hashlib.sha256(password.encode()).hexdigest()
 
-def check_and_retrain():
-    global last_modified_time
-    
-    current_modified_time = os.path.getmtime('dataset.csv')
-    if last_modified_time is None or current_modified_time > last_modified_time:
-        train_model()
+def verify_password(password, password_hash):
+    """Verify password against hash"""
+    return hash_password(password) == password_hash
 
 @app.route('/')
-def home():
-    return render_template('game.html')
+def index():
+    """Main page route"""
+    if 'user_id' in session:
+        return render_template('index.html', logged_in=True, username=session.get('username'))
+    return render_template('index.html', logged_in=False)
 
-@app.route('/save_score', methods=['POST'])
-def save_score():
-    data = request.get_json()
-    new_score = Score(
-        name=data['name'],
-        score=data['score'],
-        time=data['time'],
-        difficulty=data['difficulty']
-    )
-    db.session.add(new_score)
-    db.session.commit()
-    new_data = pd.DataFrame({
-        'score': [data['score']],
-        'time': [data['time']],
-        'difficulty': [data['difficulty']],
-        'label': ['Good' if data['score'] > 10 else 'Need Practice'] 
-    })
-
-    if os.path.exists('dataset.csv'):
-        new_data.to_csv('dataset.csv', mode='a', header=False, index=False)
-    else:
-        new_data.to_csv('dataset.csv', index=False)
-
-    train_model()
-
-    features = np.array([[data['score'], data['time'], data['difficulty']]])
-
-    if model is not None and scaler is not None:
-        features_scaled = scaler.transform(features)
-        prediction = model.predict(features_scaled)[0]
-    else:
-        prediction = 'Unknown'
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """Login route"""
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        
+        if not username or not password:
+            flash('Please fill in all fields', 'error')
+            return render_template('login.html')
+        
+        conn = get_db_connection()
+        user = conn.execute(
+            'SELECT * FROM users WHERE username = ? OR email = ?',
+            (username, username)
+        ).fetchone()
+        conn.close()
+        
+        if user and verify_password(password, user['password_hash']):
+            # Update last login
+            conn = get_db_connection()
+            conn.execute(
+                'UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?',
+                (user['id'],)
+            )
+            conn.commit()
+            conn.close()
+            
+            # Set session
+            session['user_id'] = user['id']
+            session['username'] = user['username']
+            flash('Login successful!', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid username/email or password', 'error')
     
+    return render_template('login.html')
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    """Signup route"""
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        
+        # Validation
+        if not all([username, email, password, confirm_password]):
+            flash('Please fill in all fields', 'error')
+            return render_template('signup.html')
+        
+        if password != confirm_password:
+            flash('Passwords do not match', 'error')
+            return render_template('signup.html')
+        
+        if len(password) < 6:
+            flash('Password must be at least 6 characters long', 'error')
+            return render_template('signup.html')
+        
+        # Check if user already exists
+        conn = get_db_connection()
+        existing_user = conn.execute(
+            'SELECT id FROM users WHERE username = ? OR email = ?',
+            (username, email)
+        ).fetchone()
+        
+        if existing_user:
+            flash('Username or email already exists', 'error')
+            conn.close()
+            return render_template('signup.html')
+        
+        # Create new user
+        password_hash = hash_password(password)
+        try:
+            conn.execute(
+                'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)',
+                (username, email, password_hash)
+            )
+            conn.commit()
+            
+            # Get the new user
+            new_user = conn.execute(
+                'SELECT * FROM users WHERE username = ?',
+                (username,)
+            ).fetchone()
+            conn.close()
+            
+            # Set session
+            session['user_id'] = new_user['id']
+            session['username'] = new_user['username']
+            flash('Account created successfully!', 'success')
+            return redirect(url_for('index'))
+            
+        except sqlite3.Error as e:
+            flash('An error occurred while creating your account', 'error')
+            conn.close()
+    
+    return render_template('signup.html')
+
+@app.route('/logout')
+def logout():
+    """Logout route"""
+    session.clear()
+    flash('You have been logged out', 'info')
+    return redirect(url_for('index'))
+
+@app.route('/profile')
+def profile():
+    """User profile route"""
+    if 'user_id' not in session:
+        flash('Please log in to view your profile', 'error')
+        return redirect(url_for('login'))
+    
+    conn = get_db_connection()
+    user = conn.execute(
+        'SELECT username, email, created_at, last_login FROM users WHERE id = ?',
+        (session['user_id'],)
+    ).fetchone()
+    conn.close()
+    
+    # Convert user row to dict and handle date conversion
+    user_dict = dict(user) if user else {}
+    if user_dict.get('created_at'):
+        try:
+            user_dict['created_at'] = datetime.strptime(user_dict['created_at'], '%Y-%m-%d %H:%M:%S')
+        except:
+            user_dict['created_at'] = None
+    
+    if user_dict.get('last_login'):
+        try:
+            user_dict['last_login'] = datetime.strptime(user_dict['last_login'], '%Y-%m-%d %H:%M:%S')
+        except:
+            user_dict['last_login'] = None
+    
+    return render_template('profile.html', user=user_dict)
+
+@app.route('/api/check-auth')
+def check_auth():
+    """API endpoint to check authentication status"""
     return jsonify({
-        'message': 'Score saved!',
-        'performance': prediction
+        'authenticated': 'user_id' in session,
+        'username': session.get('username', '')
     })
 
-@app.route('/get_leaderboard')
-def get_leaderboard():
-    scores = Score.query.order_by(Score.score.desc()).limit(10).all()
-    leaderboard = [{
-        'name': score.name,
-        'score': score.score,
-        'time': score.time,
-        'difficulty': score.difficulty,
-        'date': score.date.isoformat()
-    } for score in scores]
-    return jsonify(leaderboard)
+@app.route('/games/<path:filename>')
+def games(filename):
+    """Serve game files"""
+    try:
+        return send_from_directory('games', filename)
+    except FileNotFoundError:
+        flash('Game not found', 'error')
+        return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    train_model()
-    app.run(debug=True)
+    # Initialize database
+    init_db()
+    
+    # Run the app
+    app.run(debug=True, host='0.0.0.0', port=5000)

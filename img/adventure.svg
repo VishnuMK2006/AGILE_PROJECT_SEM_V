@@ -1,0 +1,41 @@
+<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b4513;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#a0522d;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="300" height="200" fill="url(#bg)"/>
+  
+  <!-- Temple walls -->
+  <rect x="50" y="60" width="200" height="120" fill="#d2691e"/>
+  <rect x="60" y="70" width="180" height="100" fill="#cd853f"/>
+  
+  <!-- Temple entrance -->
+  <rect x="130" y="120" width="40" height="60" fill="#000"/>
+  
+  <!-- Columns -->
+  <rect x="80" y="70" width="12" height="110" fill="#8b4513"/>
+  <rect x="100" y="70" width="12" height="110" fill="#8b4513"/>
+  <rect x="188" y="70" width="12" height="110" fill="#8b4513"/>
+  <rect x="208" y="70" width="12" height="110" fill="#8b4513"/>
+  
+  <!-- Temple decorations -->
+  <polygon points="50,60 150,30 250,60" fill="#8b4513"/>
+  <rect x="140" y="35" width="20" height="25" fill="#8b4513"/>
+  
+  <!-- Character (explorer) -->
+  <circle cx="150" cy="150" r="6" fill="#f4a460"/>
+  <rect x="147" y="156" width="6" height="12" fill="#8b4513"/>
+  <rect x="145" y="168" width="3" height="8" fill="#654321"/>
+  <rect x="152" y="168" width="3" height="8" fill="#654321"/>
+  <rect x="144" y="150" width="4" height="10" fill="#8b4513"/>
+  <rect x="152" y="150" width="4" height="10" fill="#8b4513"/>
+  
+  <!-- Torch -->
+  <rect x="170" y="90" width="3" height="20" fill="#8b4513"/>
+  <ellipse cx="171.5" cy="85" rx="4" ry="6" fill="#ff6b35"/>
+  <ellipse cx="171.5" cy="83" rx="2" ry="4" fill="#ffd700"/>
+</svg>
