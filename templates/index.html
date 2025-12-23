@@ -1,740 +1,879 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/arcade-machine.png') }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='img/arcade-machine.png') }}"
+    />
     <title>Arcade Zone</title>
     <style>
-        /* Global Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+      /* Global Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
 
-        :root {
-            --neon-pink: #ff00ff;
-            --neon-blue: #00ffff;
-            --neon-green: #39ff14;
-            --neon-yellow: #ffff00;
-            --dark-bg: #0a0a1a;
-            --card-bg: #151530;
-            --card-border: #2a2a4a;
-        }
+      :root {
+        --neon-pink: #ff00ff;
+        --neon-blue: #00ffff;
+        --neon-green: #39ff14;
+        --neon-yellow: #ffff00;
+        --dark-bg: #0a0a1a;
+        --card-bg: #151530;
+        --card-border: #2a2a4a;
+      }
 
-        body {
-            background-color: var(--dark-bg);
-            color: white;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(255, 0, 255, 0.05) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(0, 255, 255, 0.05) 0%, transparent 20%);
-        }
+      body {
+        background-color: var(--dark-bg);
+        color: white;
+        overflow-x: hidden;
+        background-image: radial-gradient(
+            circle at 10% 20%,
+            rgba(255, 0, 255, 0.05) 0%,
+            transparent 20%
+          ),
+          radial-gradient(
+            circle at 90% 80%,
+            rgba(0, 255, 255, 0.05) 0%,
+            transparent 20%
+          );
+      }
 
-        .container {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+      .container {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
 
-        /* Navigation Bar */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            position: relative;
-            z-index: 100;
-        }
+      /* Navigation Bar */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0;
+        position: relative;
+        z-index: 100;
+      }
 
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+      .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
 
-        .logo-section img {
-            height: 50px;
-            filter: drop-shadow(0 0 5px var(--neon-pink));
-        }
+      .logo-section img {
+        height: 50px;
+        filter: drop-shadow(0 0 5px var(--neon-pink));
+      }
 
-        .logo-section h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
-        }
+      .logo-section h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+      }
 
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
+      .nav-links {
+        display: flex;
+        gap: 30px;
+      }
 
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            padding: 8px 15px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        padding: 8px 15px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
 
-        .nav-links a::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--neon-green);
-            transition: width 0.3s ease;
-        }
+      .nav-links a::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--neon-green);
+        transition: width 0.3s ease;
+      }
 
-        .nav-links a:hover {
-            color: var(--neon-green);
-        }
+      .nav-links a:hover {
+        color: var(--neon-green);
+      }
 
-        .nav-links a:hover::before {
-            width: 100%;
-        }
+      .nav-links a:hover::before {
+        width: 100%;
+      }
 
-        /* Flash Messages */
-        .flash-messages {
-            margin: 20px 0;
-        }
+      /* Flash Messages */
+      .flash-messages {
+        margin: 20px 0;
+      }
 
-        .flash-message {
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-        }
+      .flash-message {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+      }
 
-        .flash-success {
-            background: rgba(57, 255, 20, 0.2);
-            border: 1px solid var(--neon-green);
-            color: var(--neon-green);
-        }
+      .flash-success {
+        background: rgba(57, 255, 20, 0.2);
+        border: 1px solid var(--neon-green);
+        color: var(--neon-green);
+      }
 
-        .flash-error {
-            background: rgba(255, 0, 255, 0.2);
-            border: 1px solid var(--neon-pink);
-            color: var(--neon-pink);
-        }
+      .flash-error {
+        background: rgba(255, 0, 255, 0.2);
+        border: 1px solid var(--neon-pink);
+        color: var(--neon-pink);
+      }
 
-        .flash-info {
-            background: rgba(0, 255, 255, 0.2);
-            border: 1px solid var(--neon-blue);
-            color: var(--neon-blue);
-        }
+      .flash-info {
+        background: rgba(0, 255, 255, 0.2);
+        border: 1px solid var(--neon-blue);
+        color: var(--neon-blue);
+      }
 
-        /* Hero Section */
-        .hero {
-            position: relative;
-            height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 60px;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 0 30px rgba(255, 0, 255, 0.2);
-        }
+      /* Hero Section */
+      .hero {
+        position: relative;
+        height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 60px;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 0 30px rgba(255, 0, 255, 0.2);
+      }
 
-        .hero-video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -1;
-        }
+      .hero-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+      }
 
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 10, 26, 0.7);
-            z-index: 0;
-        }
+      .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(10, 10, 26, 0.7);
+        z-index: 0;
+      }
 
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            max-width: 800px;
-            padding: 0 20px;
-        }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        max-width: 800px;
+        padding: 0 20px;
+      }
 
+      .hero-content h2 {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      }
+
+      .hero-content h2 span {
+        color: var(--neon-yellow);
+        text-shadow: 0 0 10px var(--neon-yellow);
+      }
+
+      .hero-content h3 {
+        font-size: 1.8rem;
+        margin-bottom: 30px;
+        font-weight: 400;
+      }
+
+      .hero-content h3 span {
+        color: var(--neon-blue);
+        text-shadow: 0 0 5px var(--neon-blue);
+      }
+
+      .cta-button {
+        display: inline-block;
+        padding: 15px 40px;
+        background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
+        color: white;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1.2rem;
+        border-radius: 50px;
+        box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .cta-button:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
+      }
+
+      /* Games Section */
+      .games-section {
+        padding: 60px 0;
+      }
+
+      .section-title {
+        text-align: center;
+        margin-bottom: 50px;
+        position: relative;
+      }
+
+      .section-title span {
+        font-size: 2.5rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        position: relative;
+        display: inline-block;
+      }
+
+      .section-title span::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 10%;
+        width: 80%;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--neon-green),
+          transparent
+        );
+      }
+
+      .games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+      }
+
+      .game-card {
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+        border: 1px solid var(--card-border);
+        position: relative;
+      }
+
+      .game-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        border-color: var(--neon-blue);
+      }
+
+      .game-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+      }
+
+      .game-card:hover::before {
+        transform: scaleX(1);
+      }
+
+      .card-image {
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .card-gradient {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 70%;
+        background: linear-gradient(transparent, var(--card-bg));
+      }
+
+      .card-content {
+        padding: 20px;
+      }
+
+      .card-content h4 {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+        color: var(--neon-yellow);
+      }
+
+      .card-content p {
+        color: #aaa;
+        margin-bottom: 20px;
+        line-height: 1.5;
+      }
+
+      .play-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background: transparent;
+        color: var(--neon-green);
+        text-decoration: none;
+        font-weight: 600;
+        border: 2px solid var(--neon-green);
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        text-align: center;
+        width: 100%;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .play-button:hover {
+        background: var(--neon-green);
+        color: var(--dark-bg);
+        box-shadow: 0 0 15px var(--neon-green);
+      }
+
+      /* Footer */
+      footer {
+        background-color: #050510;
+        padding: 40px 0;
+        margin-top: 60px;
+        text-align: center;
+        border-top: 1px solid var(--card-border);
+      }
+
+      .footer-content {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .footer-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .footer-logo img {
+        height: 40px;
+        filter: drop-shadow(0 0 5px var(--neon-pink));
+      }
+
+      .footer-logo h3 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .developers {
+        margin: 30px 0;
+      }
+
+      .developers h4 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        color: var(--neon-blue);
+      }
+
+      .developer-list {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .developer {
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .copyright {
+        margin-top: 30px;
+        color: #777;
+        font-size: 0.9rem;
+      }
+
+      .copyright a {
+        color: var(--neon-green);
+        text-decoration: none;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 992px) {
         .hero-content h2 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-
-        .hero-content h2 span {
-            color: var(--neon-yellow);
-            text-shadow: 0 0 10px var(--neon-yellow);
+          font-size: 2.8rem;
         }
 
         .hero-content h3 {
-            font-size: 1.8rem;
-            margin-bottom: 30px;
-            font-weight: 400;
-        }
-
-        .hero-content h3 span {
-            color: var(--neon-blue);
-            text-shadow: 0 0 5px var(--neon-blue);
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 15px 40px;
-            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
-            color: white;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
-        }
-
-        /* Games Section */
-        .games-section {
-            padding: 60px 0;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 50px;
-            position: relative;
-        }
-
-        .section-title span {
-            font-size: 2.5rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            position: relative;
-            display: inline-block;
-        }
-
-        .section-title span::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 10%;
-            width: 80%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+          font-size: 1.5rem;
         }
 
         .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          flex-direction: column;
+          gap: 20px;
         }
 
-        .game-card {
-            background-color: var(--card-bg);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-            border: 1px solid var(--card-border);
-            position: relative;
+        .nav-links {
+          gap: 15px;
         }
 
-        .game-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-            border-color: var(--neon-blue);
+        .hero {
+          height: 60vh;
         }
 
-        .game-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
+        .hero-content h2 {
+          font-size: 2.2rem;
         }
 
-        .game-card:hover::before {
-            transform: scaleX(1);
+        .hero-content h3 {
+          font-size: 1.3rem;
         }
 
-        .card-image {
-            height: 200px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .section-title span {
+          font-size: 2rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .nav-links {
+          flex-wrap: wrap;
+          justify-content: center;
         }
 
-        .card-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
+        .hero-content h2 {
+          font-size: 1.8rem;
         }
 
-        .card-gradient {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 70%;
-            background: linear-gradient(transparent, var(--card-bg));
+        .hero-content h3 {
+          font-size: 1.1rem;
         }
 
-        .card-content {
-            padding: 20px;
+        .cta-button {
+          padding: 12px 30px;
+          font-size: 1rem;
         }
 
-        .card-content h4 {
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-            color: var(--neon-yellow);
-        }
-
-        .card-content p {
-            color: #aaa;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-
-        .play-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background: transparent;
-            color: var(--neon-green);
-            text-decoration: none;
-            font-weight: 600;
-            border: 2px solid var(--neon-green);
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            text-align: center;
-            width: 100%;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .play-button:hover {
-            background: var(--neon-green);
-            color: var(--dark-bg);
-            box-shadow: 0 0 15px var(--neon-green);
-        }
-
-        /* Footer */
-        footer {
-            background-color: #050510;
-            padding: 40px 0;
-            margin-top: 60px;
-            text-align: center;
-            border-top: 1px solid var(--card-border);
-        }
-
-        .footer-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .footer-logo img {
-            height: 40px;
-            filter: drop-shadow(0 0 5px var(--neon-pink));
-        }
-
-        .footer-logo h3 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .developers {
-            margin: 30px 0;
-        }
-
-        .developers h4 {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            color: var(--neon-blue);
+        .games-grid {
+          grid-template-columns: 1fr;
         }
 
         .developer-list {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
+          flex-direction: column;
+          align-items: center;
         }
-
-        .developer {
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 5px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .copyright {
-            margin-top: 30px;
-            color: #777;
-            font-size: 0.9rem;
-        }
-
-        .copyright a {
-            color: var(--neon-green);
-            text-decoration: none;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 992px) {
-            .hero-content h2 {
-                font-size: 2.8rem;
-            }
-            
-            .hero-content h3 {
-                font-size: 1.5rem;
-            }
-            
-            .games-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            }
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .nav-links {
-                gap: 15px;
-            }
-            
-            .hero {
-                height: 60vh;
-            }
-            
-            .hero-content h2 {
-                font-size: 2.2rem;
-            }
-            
-            .hero-content h3 {
-                font-size: 1.3rem;
-            }
-            
-            .section-title span {
-                font-size: 2rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .nav-links {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .hero-content h2 {
-                font-size: 1.8rem;
-            }
-            
-            .hero-content h3 {
-                font-size: 1.1rem;
-            }
-            
-            .cta-button {
-                padding: 12px 30px;
-                font-size: 1rem;
-            }
-            
-            .games-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .developer-list {
-                flex-direction: column;
-                align-items: center;
-            }   
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <!-- Navigation Bar -->
-        <nav class="navbar">
-            <div class="logo-section">
-                <img src="{{ url_for('static', filename='img/arcade-machine.png') }}" alt="Arcade Zone Logo">
-                <h1>B2EIT</h1>
+      <!-- Navigation Bar -->
+      <nav class="navbar">
+        <div class="logo-section">
+          <img
+            src="{{ url_for('static', filename='img/arcade-machine.png') }}"
+            alt="Arcade Zone Logo"
+          />
+          <h1>B2EIT</h1>
+        </div>
+        <div class="nav-links">
+          <a href="#home">Home</a>
+          <a href="#games">Games</a>
+          <!-- Auth links removed -->
+        </div>
+      </nav>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+
+      <!-- Hero Section -->
+      <section id="home" class="hero">
+        <video class="hero-video" autoplay loop muted playsinline>
+          <source
+            src="{{ url_for('static', filename='img/new1.mp4') }}"
+            type="video/mp4"
+          />
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <h2>
+            Welcome to ARCADE Gaming<span><br />B2EIT</span>
+          </h2>
+          <h3><span>Join us</span> for Enhanced Gaming Experience</h3>
+          <a href="#games" class="cta-button">Play Now</a>
+        </div>
+      </section>
+
+      <!-- Games Section -->
+      <section id="games" class="games-section">
+        <div class="section-title">
+          <span>Most Popular Right Now</span>
+        </div>
+        <div class="games-grid">
+          <!-- Game Card 1 -->
+          <div class="game-card">
+            <div class="card-image">
+              <img
+                src="{{ url_for('static', filename='img/tic-tac-toe.svg') }}"
+                alt="Tic-Tac-Toe Game"
+              />
+              <div class="card-gradient"></div>
             </div>
-            <div class="nav-links">
-                <a href="#home">Home</a>
-                <a href="#games">Games</a>
-                {% if logged_in %}
-                    <a href="{{ url_for('profile') }}">Profile</a>
-                    <a href="{{ url_for('logout') }}">Logout</a>
-                {% else %}
-                    <a href="{{ url_for('login') }}">Login</a>
-                    <a href="{{ url_for('signup') }}">Sign Up</a>
-                {% endif %}
+            <div class="card-content">
+              <h4>Tic-Tac-Toe</h4>
+              <p>
+                "Tic Tac Toe is a simple and classic two-player game. Players
+                take turns marking a 3x3 grid with their symbol (X or O)."
+              </p>
+              <a
+                href="games/tic tak toc/JavaScriptSeries-main/TicTacToe/index.html"
+                class="play-button"
+                >Play Now</a
+              >
             </div>
-        </nav>
+          </div>
 
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-messages">
-                    {% for category, message in messages %}
-                        <div class="flash-message flash-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-
-        <!-- Hero Section -->
-        <section id="home" class="hero">
-            <video class="hero-video" autoplay loop muted playsinline>
-                <source src="{{ url_for('static', filename='img/new1.mp4') }}" type="video/mp4">
-            </video>
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                {% if logged_in %}
-                    <h2>Welcome back, {{ username }}!<span><br>Ready to Game?</span></h2>
-                    <h3><span>ML-Based</span> Performance Tracking</h3>
-                {% else %}
-                    <h2>Welcome to ARCADE Gaming<span><br>B2EIT</span></h2>
-                    <h3><span>Join us</span> for Enhanced Gaming Experience</h3>
-                {% endif %}
-                <a href="#games" class="cta-button">Play Now</a>
+          <!-- Game Card 2 -->
+          <div class="game-card">
+            <div class="card-image">
+              <img
+                src="{{ url_for('static', filename='img/car-dash.svg') }}"
+                alt="Car Dash Game"
+              />
+              <div class="card-gradient"></div>
             </div>
-        </section>
-
-        <!-- Games Section -->
-        <section id="games" class="games-section">
-            <div class="section-title">
-                <span>Most Popular Right Now</span>
+            <div class="card-content">
+              <h4>Car Dash</h4>
+              <p>
+                "Car race game is a video game where players control car to
+                complete laps or reach the finish line before other
+                competitors."
+              </p>
+              <a href="games/racer/index.html" class="play-button">Play Now</a>
             </div>
-            <div class="games-grid">
-                <!-- Game Card 1 -->
-                <div class="game-card">
-                    <div class="card-image">
-                        <img src="{{ url_for('static', filename='img/tic-tac-toe.svg') }}" alt="Tic-Tac-Toe Game">
-                        <div class="card-gradient"></div>
-                    </div>
-                    <div class="card-content">
-                        <h4>Tic-Tac-Toe</h4>
-                        <p>"Tic Tac Toe is a simple and classic two-player game. Players take turns marking a 3x3 grid with their symbol (X or O)."</p>
-                        <a href="games/tic tak toc/JavaScriptSeries-main/TicTacToe/index.html" class="play-button">Play Now</a>
-                    </div>
-                </div>
+          </div>
 
-                <!-- Game Card 2 -->
-                <div class="game-card">
-                    <div class="card-image">
-                        <img src="{{ url_for('static', filename='img/car-dash.svg') }}" alt="Car Dash Game">
-                        <div class="card-gradient"></div>
-                    </div>
-                    <div class="card-content">
-                        <h4>Car Dash</h4>
-                        <p>"Car race game is a video game where players control car to complete laps or reach the finish line before other competitors."</p>
-                        <a href="games/racer/index.html" class="play-button">Play Now</a>
-                    </div>
-                </div>
-
-                <!-- Game Card 3 -->
-                <div class="game-card">
-                    <div class="card-image">
-                        <img src="{{ url_for('static', filename='img/snake-game.svg') }}" alt="Snake Game">
-                        <div class="card-gradient"></div>
-                    </div>
-                    <div class="card-content">
-                        <h4>Snake Games</h4>
-                        <p>"Snake game is a video game where players control a snake to eat food, grow longer, and avoid crashing into yourself."</p>
-                        <a href="http://127.0.0.1:3000/" class="play-button">Play Now</a>
-                    </div>
-                </div>
-
-                <!-- Game Card 4 -->
-                <div class="game-card">
-                    <div class="card-image">
-                        <img src="{{ url_for('static', filename='img/tower-block.svg') }}" alt="Tower Block Game">
-                        <div class="card-gradient"></div>
-                    </div>
-                    <div class="card-content">
-                        <h4>Tower-Block</h4>
-                        <p>"The Tower Block game is a fun and an addictive arcade puzzle game where players stack blocks to build tower as high as possible."</p>
-                        <a href="games/tower-blocks/tower-blocks/dist/index.html" class="play-button">Play Now</a>
-                    </div>
-                </div>
-
-                <!-- Game Card 5 -->
-                <div class="game-card">
-                    <div class="card-image">
-                        <img src="{{ url_for('static', filename='img/space-invaders.svg') }}" alt="Space Invaders Game">
-                        <div class="card-gradient"></div>
-                    </div>
-                    <div class="card-content">
-                        <h4>Space Invaders</h4>
-                        <p>"Space Invaders is a classic arcade game where players shoot aliens descending toward their spaceship."</p>
-                        <a href="games/play-css-space-invaders/play-css-space-invaders/dist/index.html" class="play-button">Play Now</a>
-                    </div>
-                </div>
-
-                <!-- Game Card 6 -->
-                <div class="game-card">
-                    <div class="card-image">
-                        <img src="{{ url_for('static', filename='img/crossy-road.svg') }}" alt="Crossy Road Game">
-                        <div class="card-gradient"></div>
-                    </div>
-                    <div class="card-content">
-                        <h4>Crossy Road</h4>
-                        <p>"Crossy Road is an addictive and entertaining game where players control a character and navigate them across busy roads, rivers."</p>
-                        <a href="games/Crossy Road/index.html" class="play-button">Play Now</a>
-                    </div>
-                </div>
-
-                <!-- Game Card 7 -->
-                <div class="game-card">
-                    <div class="card-image">
-                        <img src="{{ url_for('static', filename='img/gorilla-fight.svg') }}" alt="Gorilla Fight Game">
-                        <div class="card-gradient"></div>
-                    </div>
-                    <div class="card-content">
-                        <h4>Gorilla Fight</h4>
-                        <p>"Players controlling a gorilla that throws bananas at opponents to win battles. The objective is to hit the opponent with bananas."</p>
-                        <a href="games/gorillas-main/index.html" class="play-button">Play Now</a>
-                    </div>
-                </div>
-
-                <!-- Game Card 8 -->
-                <div class="game-card">
-                    <div class="card-image">
-                        <img src="{{ url_for('static', filename='img/stick-hero.svg') }}" alt="Stick Hero Game">
-                        <div class="card-gradient"></div>
-                    </div>
-                    <div class="card-content">
-                        <h4>Stick Hero</h4>
-                        <p>"Stick Hero is an addictive game where players control a character who build bridges of varying lengths to cross gaps between platforms."</p>
-                        <a href="games/stick-hero-with-canvas/dist/index.html" class="play-button">Play Now</a>
-                    </div>
-                </div>
-
-                <!-- Game Card 9 -->
-                <div class="game-card">
-                    <div class="card-image">
-                        <img src="{{ url_for('static', filename='img/breakout.svg') }}" alt="Breakout Game">
-                        <div class="card-gradient"></div>
-                    </div>
-                    <div class="card-content">
-                        <h4>Breakout</h4>
-                        <p>"Breakout is a classic and addictive arcade game where players control a paddle to hit a ball and break bricks at the top of the screen."</p>
-                        <a href="games/Breakout-Game-main/Breakout-Game-main/index.html" class="play-button">Play Now</a>
-                    </div>
-                </div>
-
-                <!-- Game Card 10 -->
-                <div class="game-card">
-                    <div class="card-image">
-                        <img src="{{ url_for('static', filename='img/ball-run.svg') }}" alt="Ball Run Game">
-                        <div class="card-gradient"></div>
-                    </div>
-                    <div class="card-content">
-                        <h4>Ball Run</h4>
-                        <p>"Ball Run is a fast-paced arcade game where players control a rolling ball navigating through various obstacles and challenges."</p>
-                        <a href="games/Clarity-master/index.html" class="play-button">Play Now</a>
-                    </div>
-                </div>
-
-                <!-- Game Card 11 -->
-                <div class="game-card">
-                    <div class="card-image">
-                        <img src="{{ url_for('static', filename='img/adventure.svg') }}" alt="Adventure Game">
-                        <div class="card-gradient"></div>
-                    </div>
-                    <div class="card-content">
-                        <h4>Adventure</h4>
-                        <p>"Temple Adventure game typically involves navigating through a series of compact, puzzle-filled rooms within an ancient temple."</p>
-                        <a href="games/temple-exploration/index.html" class="play-button">Play Now</a>
-                    </div>
-                </div>
-
-                <!-- Game Card 12 -->
-                <div class="game-card">
-                    <div class="card-image">
-                        <img src="{{ url_for('static', filename='img/box-dash.svg') }}" alt="Box Dash Game">
-                        <div class="card-gradient"></div>
-                    </div>
-                    <div class="card-content">
-                        <h4>Box Dash</h4>
-                        <p>"Box Dash is an exciting platformer game where players control a box that jumps to avoid falling into pits and other obstacles."</p>
-                        <a href="games/daily-pen-010-a-generic-infinite-runner-game/daily-pen-010-a-generic-infinite-runner-game/dist/index.html" class="play-button">Play Now</a>
-                    </div>
-                </div>
+          <!-- Game Card 3 -->
+          <div class="game-card">
+            <div class="card-image">
+              <img
+                src="{{ url_for('static', filename='img/snake-game.svg') }}"
+                alt="Snake Game"
+              />
+              <div class="card-gradient"></div>
             </div>
-        </section>
-
-        <!-- Footer -->
-        <footer>
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <img src="{{ url_for('static', filename='img/arcade-machine.png') }}" alt="Arcade Zone Logo">
-                    <h3>ARCADE ZONE</h3>
-                </div>
-                <div id="about"class="developers">
-                    <h4>Developers</h4>
-                    <div class="developer-list">
-                        <div class="developer">Vishnu Manikandan T (vishnumanikandant.23cse@kongu.edu)</div>
-                        <div class="developer">Suriyaa B K (suriyaaba.23cse@kongu.edu)</div>
-                        <div class="developer">Tharaneesh (tharaneesh.23cse@kongu.edu)</div>
-                        <div class="developer">Sujith n (sujithn.23cse@kongu.edu)</div>
-                    </div>
-                </div>
-                <div class="copyright">
-                    &copy; 2025 B2EiT. Designed and Developed by: <a href="https://github.com/VishnuMK2006">B2EiT</a>
-                </div>
+            <div class="card-content">
+              <h4>Snake Games</h4>
+              <p>
+                "Snake game is a video game where players control a snake to eat
+                food, grow longer, and avoid crashing into yourself."
+              </p>
+              <a href="http://127.0.0.1:3000/" class="play-button">Play Now</a>
             </div>
-        </footer>
+          </div>
+
+          <!-- Game Card 4 -->
+          <div class="game-card">
+            <div class="card-image">
+              <img
+                src="{{ url_for('static', filename='img/tower-block.svg') }}"
+                alt="Tower Block Game"
+              />
+              <div class="card-gradient"></div>
+            </div>
+            <div class="card-content">
+              <h4>Tower-Block</h4>
+              <p>
+                "The Tower Block game is a fun and an addictive arcade puzzle
+                game where players stack blocks to build tower as high as
+                possible."
+              </p>
+              <a
+                href="games/tower-blocks/tower-blocks/dist/index.html"
+                class="play-button"
+                >Play Now</a
+              >
+            </div>
+          </div>
+
+          <!-- Game Card 5 -->
+          <div class="game-card">
+            <div class="card-image">
+              <img
+                src="{{ url_for('static', filename='img/space-invaders.svg') }}"
+                alt="Space Invaders Game"
+              />
+              <div class="card-gradient"></div>
+            </div>
+            <div class="card-content">
+              <h4>Space Invaders</h4>
+              <p>
+                "Space Invaders is a classic arcade game where players shoot
+                aliens descending toward their spaceship."
+              </p>
+              <a
+                href="games/play-css-space-invaders/play-css-space-invaders/dist/index.html"
+                class="play-button"
+                >Play Now</a
+              >
+            </div>
+          </div>
+
+          <!-- Game Card 6 -->
+          <div class="game-card">
+            <div class="card-image">
+              <img
+                src="{{ url_for('static', filename='img/crossy-road.svg') }}"
+                alt="Crossy Road Game"
+              />
+              <div class="card-gradient"></div>
+            </div>
+            <div class="card-content">
+              <h4>Crossy Road</h4>
+              <p>
+                "Crossy Road is an addictive and entertaining game where players
+                control a character and navigate them across busy roads,
+                rivers."
+              </p>
+              <a href="games/Crossy Road/index.html" class="play-button"
+                >Play Now</a
+              >
+            </div>
+          </div>
+
+          <!-- Game Card 7 -->
+          <div class="game-card">
+            <div class="card-image">
+              <img
+                src="{{ url_for('static', filename='img/gorilla-fight.svg') }}"
+                alt="Gorilla Fight Game"
+              />
+              <div class="card-gradient"></div>
+            </div>
+            <div class="card-content">
+              <h4>Gorilla Fight</h4>
+              <p>
+                "Players controlling a gorilla that throws bananas at opponents
+                to win battles. The objective is to hit the opponent with
+                bananas."
+              </p>
+              <a href="games/gorillas-main/index.html" class="play-button"
+                >Play Now</a
+              >
+            </div>
+          </div>
+
+          <!-- Game Card 8 -->
+          <div class="game-card">
+            <div class="card-image">
+              <img
+                src="{{ url_for('static', filename='img/stick-hero.svg') }}"
+                alt="Stick Hero Game"
+              />
+              <div class="card-gradient"></div>
+            </div>
+            <div class="card-content">
+              <h4>Stick Hero</h4>
+              <p>
+                "Stick Hero is an addictive game where players control a
+                character who build bridges of varying lengths to cross gaps
+                between platforms."
+              </p>
+              <a
+                href="games/stick-hero-with-canvas/dist/index.html"
+                class="play-button"
+                >Play Now</a
+              >
+            </div>
+          </div>
+
+          <!-- Game Card 9 -->
+          <div class="game-card">
+            <div class="card-image">
+              <img
+                src="{{ url_for('static', filename='img/breakout.svg') }}"
+                alt="Breakout Game"
+              />
+              <div class="card-gradient"></div>
+            </div>
+            <div class="card-content">
+              <h4>Breakout</h4>
+              <p>
+                "Breakout is a classic and addictive arcade game where players
+                control a paddle to hit a ball and break bricks at the top of
+                the screen."
+              </p>
+              <a
+                href="games/Breakout-Game-main/Breakout-Game-main/index.html"
+                class="play-button"
+                >Play Now</a
+              >
+            </div>
+          </div>
+
+          <!-- Game Card 10 -->
+          <div class="game-card">
+            <div class="card-image">
+              <img
+                src="{{ url_for('static', filename='img/ball-run.svg') }}"
+                alt="Ball Run Game"
+              />
+              <div class="card-gradient"></div>
+            </div>
+            <div class="card-content">
+              <h4>Ball Run</h4>
+              <p>
+                "Ball Run is a fast-paced arcade game where players control a
+                rolling ball navigating through various obstacles and
+                challenges."
+              </p>
+              <a href="games/Clarity-master/index.html" class="play-button"
+                >Play Now</a
+              >
+            </div>
+          </div>
+
+          <!-- Game Card 11 -->
+          <div class="game-card">
+            <div class="card-image">
+              <img
+                src="{{ url_for('static', filename='img/adventure.svg') }}"
+                alt="Adventure Game"
+              />
+              <div class="card-gradient"></div>
+            </div>
+            <div class="card-content">
+              <h4>Adventure</h4>
+              <p>
+                "Temple Adventure game typically involves navigating through a
+                series of compact, puzzle-filled rooms within an ancient
+                temple."
+              </p>
+              <a href="games/temple-exploration/index.html" class="play-button"
+                >Play Now</a
+              >
+            </div>
+          </div>
+
+          <!-- Game Card 12 -->
+          <div class="game-card">
+            <div class="card-image">
+              <img
+                src="{{ url_for('static', filename='img/box-dash.svg') }}"
+                alt="Box Dash Game"
+              />
+              <div class="card-gradient"></div>
+            </div>
+            <div class="card-content">
+              <h4>Box Dash</h4>
+              <p>
+                "Box Dash is an exciting platformer game where players control a
+                box that jumps to avoid falling into pits and other obstacles."
+              </p>
+              <a
+                href="games/daily-pen-010-a-generic-infinite-runner-game/daily-pen-010-a-generic-infinite-runner-game/dist/index.html"
+                class="play-button"
+                >Play Now</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer>
+        <div class="footer-content">
+          <div class="footer-logo">
+            <img
+              src="{{ url_for('static', filename='img/arcade-machine.png') }}"
+              alt="Arcade Zone Logo"
+            />
+            <h3>ARCADE ZONE</h3>
+          </div>
+          
+          <div style="margin: 20px 0; text-align: center;">
+            <a href='http://www.freevisitorcounters.com'>free visitor counters</a> <script type='text/javascript' src='https://www.freevisitorcounters.com/auth.php?id=a2c42ff3629486db5f1cae074a175e89251503c8'></script>
+            <script type="text/javascript" src="https://www.freevisitorcounters.com/en/home/counter/1465646/t/5"></script>
+          </div>
+          <div id="about" class="developers">
+            <h4>Developers</h4>
+            <div class="developer-list">
+              <div class="developer">
+                Vishnu Manikandan T (vishnumanikandant.23cse@kongu.edu)
+              </div>
+              <div class="developer">
+                Suriyaa B K (suriyaaba.23cse@kongu.edu)
+              </div>
+              <div class="developer">
+                Tharaneesh (tharaneesh.23cse@kongu.edu)
+              </div>
+              <div class="developer">Sujith n (sujithn.23cse@kongu.edu)</div>
+            </div>
+          </div>
+          <div class="copyright">
+            &copy; 2025 B2EiT. Designed and Developed by:
+            <a href="https://github.com/VishnuMK2006">B2EiT</a>
+          </div>
+        </div>
+      </footer>
     </div>
-</body>
+  </body>
 </html>
